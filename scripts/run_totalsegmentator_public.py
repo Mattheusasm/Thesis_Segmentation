@@ -24,7 +24,7 @@ def main():
 
     # First test on ONE case only.
     # After this works, set single_case_name = None to run all files.
-    single_case_name = "case84_day21.nii.gz"
+    single_case_name = None #"case84_day21.nii.gz"
 
     if single_case_name is not None:
         input_path = public_root / single_case_name
