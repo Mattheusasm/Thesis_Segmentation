@@ -419,3 +419,190 @@ def print_outlier_qc_summary(outlier_df, missing_qc_df):
                 ]
             ]
         )
+
+def create_initial_qc_decision_table(organ_long_df):
+    """
+    Create a QC table with one row per file-organ pair.
+    Default: everything is included unless we flag it later.
+    """
+    qc_df = organ_long_df[
+        [
+            "file_name",
+            "organ_name",
+            "present",
+            "voxel_count",
+            "volume_ml",
+            "volume_ml_for_stats",
+            "n_slices_present",
+            "best_slice",
+        ]
+    ].copy()
+
+    qc_df["qc_flag"] = "ok"
+    qc_df["qc_reason"] = ""
+    qc_df["use_for_volume_stats"] = True
+
+    # Missing organs are not true zero anatomy.
+    qc_df.loc[~qc_df["present"], "qc_flag"] = "missing_prediction"
+    qc_df.loc[~qc_df["present"], "qc_reason"] = "Organ was not segmented by TotalSegmentator."
+    qc_df.loc[~qc_df["present"], "use_for_volume_stats"] = False
+
+    return qc_df
+
+
+def apply_manual_qc_flags(qc_df):
+    """
+    Apply strict manual flags based on visual outlier QC.
+    You can edit this list later if visual inspection changes.
+    """
+    qc_df = qc_df.copy()
+
+    manual_flags = [
+        {
+            "file_name": "case78_day22.nii.gz",
+            "organ_name": "duodenum",
+            "qc_flag": "exclude_near_empty_prediction",
+            "qc_reason": "Duodenum prediction has only 4 voxels and is not reliable.",
+            "use_for_volume_stats": False,
+        },
+        {
+            "file_name": "case24_day25.nii.gz",
+            "organ_name": "stomach",
+            "qc_flag": "review_tiny_prediction",
+            "qc_reason": "Smallest stomach prediction; likely undersegmented.",
+            "use_for_volume_stats": False,
+        },
+        {
+            "file_name": "case65_day28.nii.gz",
+            "organ_name": "kidney_left",
+            "qc_flag": "review_tiny_prediction",
+            "qc_reason": "Smallest left kidney prediction; same scan has multiple tiny organs.",
+            "use_for_volume_stats": False,
+        },
+        {
+            "file_name": "case65_day28.nii.gz",
+            "organ_name": "kidney_right",
+            "qc_flag": "review_tiny_prediction",
+            "qc_reason": "Smallest right kidney prediction; same scan has multiple tiny organs.",
+            "use_for_volume_stats": False,
+        },
+        {
+            "file_name": "case65_day28.nii.gz",
+            "organ_name": "small_bowel",
+            "qc_flag": "review_tiny_prediction",
+            "qc_reason": "Smallest small bowel prediction; same scan has multiple tiny organs.",
+            "use_for_volume_stats": False,
+        },
+        {
+            "file_name": "case65_day0.nii.gz",
+            "organ_name": "spleen",
+            "qc_flag": "review_large_prediction",
+            "qc_reason": "Largest spleen prediction; visually very large.",
+            "use_for_volume_stats": True,
+        },
+        {
+            "file_name": "case119_day21.nii.gz",
+            "organ_name": "stomach",
+            "qc_flag": "review_large_prediction",
+            "qc_reason": "Largest stomach prediction.",
+            "use_for_volume_stats": True,
+        },
+        {
+            "file_name": "case119_day21.nii.gz",
+            "organ_name": "small_bowel",
+            "qc_flag": "review_large_prediction",
+            "qc_reason": "Largest small bowel prediction.",
+            "use_for_volume_stats": True,
+        },
+        {
+            "file_name": "case134_day22.nii.gz",
+            "organ_name": "colon",
+            "qc_flag": "review_large_prediction",
+            "qc_reason": "Largest colon prediction.",
+            "use_for_volume_stats": True,
+        },
+        {
+            "file_name": "case77_day20.nii.gz",
+            "organ_name": "colon",
+            "qc_flag": "review_small_prediction",
+            "qc_reason": "Smallest colon prediction.",
+            "use_for_volume_stats": True,
+        },
+    ]
+
+    for flag in manual_flags:
+        mask = (
+            (qc_df["file_name"] == flag["file_name"])
+            & (qc_df["organ_name"] == flag["organ_name"])
+        )
+
+        qc_df.loc[mask, "qc_flag"] = flag["qc_flag"]
+        qc_df.loc[mask, "qc_reason"] = flag["qc_reason"]
+        qc_df.loc[mask, "use_for_volume_stats"] = flag["use_for_volume_stats"]
+
+    return qc_df
+
+
+def apply_qc_to_organ_long_df(organ_long_df, qc_df):
+    """
+    Add QC decisions to organ_long_df.
+    Create a cleaned volume column where excluded cases become NaN.
+    """
+    merged = organ_long_df.merge(
+        qc_df[
+            [
+                "file_name",
+                "organ_name",
+                "qc_flag",
+                "qc_reason",
+                "use_for_volume_stats",
+            ]
+        ],
+        on=["file_name", "organ_name"],
+        how="left",
+    )
+
+    merged["qc_flag"] = merged["qc_flag"].fillna("ok")
+    merged["qc_reason"] = merged["qc_reason"].fillna("")
+    merged["use_for_volume_stats"] = merged["use_for_volume_stats"].fillna(True)
+
+    merged["volume_ml_qc"] = merged["volume_ml_for_stats"]
+
+    merged.loc[~merged["use_for_volume_stats"], "volume_ml_qc"] = np.nan
+
+    return merged
+
+
+def build_qc_filtered_volume_stats(organ_long_qc_df):
+    """
+    Build volume stats after QC exclusions.
+    """
+    stats_df = (
+        organ_long_qc_df
+        .groupby("organ_name")["volume_ml_qc"]
+        .agg(
+            n_used="count",
+            mean_ml="mean",
+            std_ml="std",
+            min_ml="min",
+            median_ml="median",
+            max_ml="max",
+        )
+        .reset_index()
+    )
+
+    return stats_df.sort_values("organ_name").reset_index(drop=True)
+
+
+def build_qc_flag_counts(qc_df):
+    """
+    Count QC flags per organ.
+    """
+    return (
+        qc_df
+        .groupby(["organ_name", "qc_flag"])["file_name"]
+        .count()
+        .reset_index(name="n")
+        .sort_values(["organ_name", "qc_flag"])
+        .reset_index(drop=True)
+    )
