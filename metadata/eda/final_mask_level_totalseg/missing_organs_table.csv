@@ -1,0 +1,5 @@
+file_name,organ_name,label_ids,present,voxel_count,volume_mm3,volume_ml,volume_ml_for_stats,fraction_of_scan_voxels,shape_x,shape_y,shape_z,spacing_x,spacing_y,spacing_z,first_slice,last_slice,n_slices_present,best_slice,bbox_x_min,bbox_x_max,bbox_y_min,bbox_y_max,bbox_z_min,bbox_z_max,bbox_size_x,bbox_size_y,bbox_size_z
+case144_day14.nii.gz,duodenum,14,False,0,0.0,0.0,,0.0,266,266,144,1.5,1.5,3.0,,,0,,,,,,,,0,0,0
+case44_day0.nii.gz,duodenum,14,False,0,0.0,0.0,,0.0,266,266,144,1.5,1.5,3.0,,,0,,,,,,,,0,0,0
+case78_day18.nii.gz,duodenum,14,False,0,0.0,0.0,,0.0,360,310,144,1.5,1.5,3.0,,,0,,,,,,,,0,0,0
+case9_day22.nii.gz,duodenum,14,False,0,0.0,0.0,,0.0,360,310,144,1.5,1.5,3.0,,,0,,,,,,,,0,0,0

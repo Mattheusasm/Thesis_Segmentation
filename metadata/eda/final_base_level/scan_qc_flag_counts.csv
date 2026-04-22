@@ -1,0 +1,4 @@
+qc_flags_split,n_scans
+non_modal_slice_count,15
+non_modal_spacing,15
+nonzero_fraction_outlier,3

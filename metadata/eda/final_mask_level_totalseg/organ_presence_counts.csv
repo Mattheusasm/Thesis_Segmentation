@@ -1,0 +1,8 @@
+organ_name,n_present,n_total,n_missing,missing_fraction
+duodenum,270,274,4,0.014598540145985401
+colon,274,274,0,0.0
+kidney_left,274,274,0,0.0
+kidney_right,274,274,0,0.0
+small_bowel,274,274,0,0.0
+spleen,274,274,0,0.0
+stomach,274,274,0,0.0

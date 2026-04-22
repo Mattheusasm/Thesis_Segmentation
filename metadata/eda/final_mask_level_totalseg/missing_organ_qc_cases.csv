@@ -1,0 +1,5 @@
+file_name,organ_name,label_ids,present,voxel_count,volume_ml,first_slice,last_slice,n_slices_present,best_slice
+case144_day14.nii.gz,duodenum,14,False,0,0.0,,,0,
+case44_day0.nii.gz,duodenum,14,False,0,0.0,,,0,
+case78_day18.nii.gz,duodenum,14,False,0,0.0,,,0,
+case9_day22.nii.gz,duodenum,14,False,0,0.0,,,0,

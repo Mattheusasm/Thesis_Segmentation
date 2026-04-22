@@ -1,0 +1,15 @@
+outlier_type,file_name,organ_name,label_ids,present,voxel_count,volume_ml,volume_ml_for_stats,first_slice,last_slice,n_slices_present,best_slice
+largest,case134_day22.nii.gz,colon,15,True,218908,1477.629,1477.629,0.0,98.0,99,82.0
+smallest_non_missing,case77_day20.nii.gz,colon,15,True,17748,119.799,119.799,0.0,52.0,42,25.0
+largest,case107_day19.nii.gz,duodenum,14,True,10543,71.16525,71.16525,49.0,73.0,25,55.0
+smallest_non_missing,case78_day22.nii.gz,duodenum,14,True,4,0.027,0.027,31.0,32.0,2,31.0
+largest,case145_day19.nii.gz,kidney_left,3,True,36736,247.968,247.968,27.0,76.0,50,63.0
+smallest_non_missing,case65_day28.nii.gz,kidney_left,3,True,3988,26.919,26.919,0.0,9.0,10,4.0
+largest,case122_day27.nii.gz,kidney_right,2,True,32929,222.27075,222.27075,27.0,70.0,44,58.0
+smallest_non_missing,case65_day28.nii.gz,kidney_right,2,True,2982,20.1285,20.1285,3.0,15.0,13,10.0
+largest,case119_day21.nii.gz,small_bowel,13,True,155444,1049.247,1049.247,0.0,69.0,70,44.0
+smallest_non_missing,case65_day28.nii.gz,small_bowel,13,True,7619,51.42825,51.42825,0.0,35.0,33,20.0
+largest,case65_day0.nii.gz,spleen,1,True,174293,1176.47775,1176.47775,21.0,83.0,63,62.0
+smallest_non_missing,case15_day0.nii.gz,spleen,1,True,23963,161.75025,161.75025,67.0,93.0,27,82.0
+largest,case119_day21.nii.gz,stomach,6,True,99971,674.80425,674.80425,64.0,95.0,32,78.0
+smallest_non_missing,case24_day25.nii.gz,stomach,6,True,4105,27.70875,27.70875,64.0,98.0,35,85.0
