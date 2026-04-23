@@ -1,0 +1,3 @@
+score_name,fit_split,q1_threshold,q2_threshold
+primary_variation_score_refit,dev_only,0.6696717013979986,0.9049483388017757
+sensitivity_variation_score_refit,dev_only,0.7028551328217186,0.9273001672041019

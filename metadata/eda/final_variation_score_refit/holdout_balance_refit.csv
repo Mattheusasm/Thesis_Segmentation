@@ -1,0 +1,7 @@
+split,primary_variation_stratum_final,n_cases
+dev,high,23
+dev,low,23
+dev,medium,22
+test,high,7
+test,low,6
+test,medium,4
